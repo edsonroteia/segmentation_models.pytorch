@@ -1,7 +1,9 @@
 import numpy as np
+import torchvision.transforms.functional as TF
 
-
-def preprocess_input(x, mean=None, std=None, input_space="RGB", input_range=None, **kwargs):
+def preprocess_input(
+    x, mean=None, std=None, input_space="RGB", input_range=None, **kwargs
+):
 
     if input_space == "BGR":
         x = x[..., ::-1].copy()
@@ -11,11 +13,6 @@ def preprocess_input(x, mean=None, std=None, input_space="RGB", input_range=None
             x = x / 255.0
 
     if mean is not None:
-        mean = np.array(mean)
-        x = x - mean
-
-    if std is not None:
-        std = np.array(std)
-        x = x / std
+        x = TF.normalize(x, mean=np.array(mean), std=np.array(std))
 
     return x
